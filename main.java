@@ -1,38 +1,32 @@
-import java.util.*;
-
-class Point {
-    int x, y;
-
-    public Point(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public double distance(Point other) {
-        return Math.sqrt(Math.pow(x - other.x, 2) + Math.pow(y - other.y, 2));
-    }
-}
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 class Main {
-    public static double calculatePerimeter(Point p1, Point p2, Point p3) {
-        double side1 = p1.distance(p2);
-        double side2 = p2.distance(p3);
-        double side3 = p3.distance(p1);
-        return side1 + side2 + side3;
-    }
 
     public static void main(String[] args) {
-        List<Point> points = new ArrayList<>();
-        points.add(new Point(0, 0));
-        points.add(new Point(1, 1));
-        points.add(new Point(2, 2));
-        points.add(new Point(3, 1));
-        points.add(new Point(0, 3));
+        Scanner scanner = new Scanner(System.in);
+        List<Point> points = new ArrayList<>(); // Список для хранения всех точек
+
+        System.out.println("Введите количество точек: ");
+        int n = scanner.nextInt();
+
+        // Проверка на допустимое количество точек
+        while (n < 3) {
+            System.out.println("Ошибка: для формирования треугольника необходимо как минимум 3 точки.");
+            n = scanner.nextInt();
+        }
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("Введите координаты точки " + (i + 1) + " (формат: x y):");
+            int x = scanner.nextInt();
+            int y = scanner.nextInt();
+            points.add(new Point(x, y));
+        }
 
         double maxPerimeter = 0;
-        Point[] maxPoints = new Point[3];
+        Point[] maxPoints = new Point[3]; // Массив для хранения точек треугольника с максимальным периметром
 
-        // Перебираем все комбинации троек точек
         for (int i = 0; i < points.size(); i++) {
             for (int j = i + 1; j < points.size(); j++) {
                 for (int k = j + 1; k < points.size(); k++) {
@@ -40,11 +34,8 @@ class Main {
                     Point p2 = points.get(j);
                     Point p3 = points.get(k);
 
-                    // Вычисляем периметр текущего треугольника
-                    double perimeter = calculatePerimeter(p1, p2, p3);
+                    double perimeter = Point.calculatePerimeter(p1, p2, p3);
 
-                    // Если периметр текущего треугольника больше максимального найденного,
-                    // обновляем максимальный периметр и тройку точек
                     if (perimeter > maxPerimeter) {
                         maxPerimeter = perimeter;
                         maxPoints[0] = p1;
@@ -55,7 +46,6 @@ class Main {
             }
         }
 
-        // Выводим результат
         System.out.println("Точки треугольника с наибольшим периметром:");
         for (Point p : maxPoints) {
             System.out.println("(" + p.x + ", " + p.y + ")");
